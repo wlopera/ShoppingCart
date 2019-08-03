@@ -10,7 +10,7 @@ import com.wlopera.shopping.model.ProductDTO;
 /**
  * Servicios de procesamientos de productos contra base de datos
  * 
- * @author Willian Lopera
+ * @author William Lopera
  */
 public interface ProductDTOApi {
 
@@ -38,6 +38,16 @@ public interface ProductDTOApi {
 	 * @param product Producto a borrar
 	 */
 	public void delete(ProductDTO product);
+
+
+	/**
+	 * Operacion de consulta de productos por identificador
+	 * 
+	 * @param name Identificador del producto
+	 * 
+	 * @return Producto
+	 */
+	public ProductDTO findByIdProduct(String idProduct);
 
 	/**
 	 * Operacion de consulta de productos por nombre

@@ -9,7 +9,7 @@ import lombok.ToString;
 /**
  * Modelo de Base de datos - Producto
  * 
- * @author Willian Lopera
+ * @author William Lopera
  */
 @Data
 @NoArgsConstructor

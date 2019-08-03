@@ -12,98 +12,66 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wlopera.shopping.entity.ProductDAO;
 import com.wlopera.shopping.model.ProductDTO;
 import com.wlopera.shopping.repository.ProductRepository;
+import com.wlopera.shopping.util.ProductMapper;
 
 /**
  * Implemantacion de servicios de procesamientos de productos contra base de
  * datos
  * 
- * @author Willian Lopera
+ * @author William Lopera
  */
 @Service
 @Transactional(readOnly = true)
 public class ProductDTOService implements ProductDTOApi {
 
-	private ProductRepository productRepository;
+	private ProductRepository repository;
 
-	public ProductDTOService(ProductRepository productRepository) {
-		this.productRepository = productRepository;
+	private ProductMapper mapper;
+
+	public ProductDTOService(ProductRepository repository) {
+		mapper = new ProductMapper();
+		this.repository = repository;
 	}
 
 	@Override
+	@Transactional
 	public ProductDTO create(ProductDTO product) {
-		return toProductDTO(productRepository.save(toProductDAO(product)));
+		return mapper.toProductDTO(repository.save(mapper.toProductDAO(product)));
 	}
 
 	@Override
+	@Transactional
 	public ProductDTO update(ProductDTO product) {
-		return toProductDTO(productRepository.save(toProductDAO(product)));
+		return mapper.toProductDTO(repository.save(mapper.toProductDAO(product)));
 	}
 
 	@Override
+	@Transactional
 	public void delete(ProductDTO product) {
-		productRepository.delete(toProductDAO(product));
+		repository.delete(mapper.toProductDAO(product));
+	}
+
+	@Override
+	public ProductDTO findByIdProduct(String idProduct) {
+		return mapper.toProductDTO(repository.findByIdProduct(idProduct));
 	}
 
 	@Override
 	public ProductDTO findByName(String name) {
-		return toProductDTO(productRepository.findByName(name));
+		return mapper.toProductDTO(repository.findByName(name));
 	}
 
 	@Override
 	public List<ProductDTO> findAll() {
-		List<ProductDAO> inputList = productRepository.findAll();
+		List<ProductDAO> inputList = repository.findAll();
 
 		List<ProductDTO> outputList = new ArrayList<>();
 
 		for (ProductDAO input : inputList) {
-			outputList.add(toProductDTO(input));
+			outputList.add(mapper.toProductDTO(input));
 		}
 
 		return outputList;
-	}
-
-	/**
-	 * Conversor objeto 'ProductDTO' a objeto 'ProductDAO'
-	 * 
-	 * @param input Producto del modelo de negocio
-	 * 
-	 * @return Producto del modelo de base de datos
-	 */
-	private ProductDAO toProductDAO(ProductDTO input) {
-
-		ProductDAO output = new ProductDAO();
-
-		output.setIdProduct(input.getIdProduct());
-		output.setName(input.getName());
-		output.setDescription(input.getDescription());
-		output.setImage(input.getImage());
-		output.setPrece(input.getPrece());
-		output.setStock(input.getStock());
-
-		return output;
-
-	}
-
-	/**
-	 * Conversor objeto 'ProductDAO' a objeto 'ProductDTO'
-	 * 
-	 * @param input Producto del modelo de base de datos
-	 * 
-	 * @return Producto del modelo de negocio
-	 */
-	private ProductDTO toProductDTO(ProductDAO input) {
-
-		ProductDTO output = new ProductDTO();
-
-		output.setIdProduct(input.getIdProduct());
-		output.setName(input.getName());
-		output.setDescription(input.getDescription());
-		output.setImage(input.getImage());
-		output.setPrece(input.getPrece());
-		output.setStock(input.getStock());
-
-		return output;
-
 	}
 
 }
